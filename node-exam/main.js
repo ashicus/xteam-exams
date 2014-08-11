@@ -14,9 +14,9 @@ fs.readFile(tagsFile, function (err, data) {
 	if(err) { throw err; }
 
 	tagsToFind = data.toString().split('\n');
-	tagsToFind.forEach(function(elem) {
-		if(elem) {
-			results.push({ tag: elem, count: 0 });
+	tagsToFind.forEach(function(tag) {
+		if(tag) {
+			results.push({ tag: tag, count: 0 });
 		}
 	});
 
@@ -25,9 +25,9 @@ fs.readFile(tagsFile, function (err, data) {
 		if(err) { throw err; }
 
 		// construct array of data files to load
-		for(var i in files) {
-			dataFiles.push(dataDir + files[i]);
-		}
+		files.forEach(function(file) {
+			dataFiles.push(dataDir + file);
+		});
 
 		// start the process of loading the data files
 		processNextFile();
@@ -65,25 +65,26 @@ function processNextFile() {
 				if(tagsToFind.indexOf(tag) > -1) {
 					results.forEach(function(result) {
 						if(result.tag === tag) {
-							result.count++;
+							result.count += 1;
 						}
 					});
 				}
 			});
 		}
 
-		if(dataFiles[++currentFile]) {
+		if(dataFiles[currentFile+1]) {
 			// process next file
+			currentFile += 1;
 			processNextFile();
 		} else {
 			// sort results by popularity
 			results.sort(sortTags);
 			
-			console.log('--------');
+			console.log('-----------------');
 			results.forEach(function(elem) {
-				console.log(elem.tag + ': ' + elem.count);
+				console.log(elem.tag + '\t\t' + elem.count);
 			});
-			console.log('--------');
+			console.log('-----------------');
 		}
 	});
 }
