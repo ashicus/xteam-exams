@@ -1,6 +1,11 @@
 var tag_finder = require('./modules/tag_finder');
 
-var tagsFile = 'tags.txt';
+if(process.argv.length < 3) {
+	console.error('Usage: node main.js [tag_file]');
+	return;
+}
+
+var tagsFile = process.argv[2];
 var dataDir = 'data/';
 
 tag_finder.find_tags(tagsFile, dataDir, function(results) {
